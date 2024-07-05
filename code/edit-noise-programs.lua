@@ -336,22 +336,11 @@ local function clamp_aux(raw_aux)
 	return noise.clamp(raw_aux, 0, 1)
 end
 
-return {
-	noise = noise,
-	make_basis_noise_function = make_basis_noise_function,
-	multioctave_noise = multioctave_noise,
-	simple_variable_persistence_multioctave_noise = simple_variable_persistence_multioctave_noise,
-	simple_amplitude_corrected_multioctave_noise = simple_amplitude_corrected_multioctave_noise,
-	make_multioctave_noise_function = make_multioctave_noise_function,
-	make_multioctave_modulated_noise_function = make_multioctave_modulated_noise_function,
-	multiplierToShift = multiplierToShift,
-	standard_starting_lake_elevation_expression = standard_starting_lake_elevation_expression,
-	water_level_correct = water_level_correct,
-	finish_elevation = finish_elevation,
-	make_0_12like_lakes = make_0_12like_lakes,
-	average_sea_level_temperature = average_sea_level_temperature,
-	elevation_temperature_gradient = elevation_temperature_gradient,
-	clamp_moisture = clamp_moisture,
-	clamp_temperature = clamp_temperature,
-	clamp_aux = clamp_aux,
-}
+
+------------------------------------------------------------------------
+
+data.raw["noise-expression"]["0_17-lakes-elevation"].expression = noise.define_noise_function(function(x, y, tile, map)
+	x = x * map.segmentation_multiplier + 10000 -- Move the point where 'fractal similarity' is obvious off into the boonies
+	y = y * map.segmentation_multiplier
+	return finish_elevation(make_0_12like_lakes(x, y, tile, map), map)
+end)
