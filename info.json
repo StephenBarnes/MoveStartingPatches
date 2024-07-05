@@ -8,5 +8,5 @@
 		"base >= 1.1",
 		"? IndustrialRevolution3 >= 3.0.0"
 	],
-	"description": "Adds world options to move around the starting resource patches and the starting lake."
+	"description": "Adds world options to move around the starting lake, starting resource patches, and other resource patches. Now you can build your factory north-to-south every time."
 }

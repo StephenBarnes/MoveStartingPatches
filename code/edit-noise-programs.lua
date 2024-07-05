@@ -1,3 +1,7 @@
+-- NOTE This code is copied directly from Factorio's core files. It's not my code.
+-- I have edited it in some places (marked with MODIFIED BY MOD or ADDED BY MOD) to insert the new autoplace settings.
+-- Then at the bottom, we overwrite the game's default elevation noise-expression with our modified version.
+------------------------------------------------------------------------
 
 local noise = require("noise")
 local util = require("util")

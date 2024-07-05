@@ -5,6 +5,7 @@
 -- There's a noise-layer called "uranium-ore".
 -- We could set uranium ore entity to use a different noise-layer called "uranium-ore-OFFSET".
 -- Then we define that new noise-layer to use the same expression as the original one, but offset.
+-- However, this wouldn't allow moving starting patches separately from the other patches.
 
 -- Another option:
 -- We could look through the actual AutoplaceSpecification parse-tree thing recursively, and look for any value of the "x" or "y" vars.
@@ -34,6 +35,7 @@ local function isStartingVariable(var)
 end
 
 local function makeOffsetVar(varName, offsetArgsName)
+	-- Creates a noise expression tree that returns x (or y) offset by the log2 of the offset control, multiplied by the squared scale control, multiplied by 64.
 	-- eg varName == "x", offsetArgsName == "starting-resources"
 	return {
 		arguments = {
@@ -53,7 +55,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 								arguments = {
 									{
 										source_location = {
-											filename = "__MapGenTweaks__/edited-noise-programs.lua",
+											filename = "__MoveStartingPatches__/edited-noise-programs.lua",
 											line_number = 209
 										},
 										type = "variable",
@@ -63,7 +65,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 								},
 								function_name = "log2",
 								source_location = {
-									filename = "__MapGenTweaks__/edited-noise-programs.lua",
+									filename = "__MoveStartingPatches__/edited-noise-programs.lua",
 									line_number = 205
 								},
 								type = "function-application"
@@ -79,7 +81,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 						},
 						function_name = "multiply",
 						source_location = {
-							filename = "__MapGenTweaks__/edited-noise-programs.lua",
+							filename = "__MoveStartingPatches__/edited-noise-programs.lua",
 							line_number = 205
 						},
 						type = "function-application"
@@ -88,7 +90,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 						arguments = {
 							{
 								source_location = {
-									filename = "__MapGenTweaks__/edited-noise-programs.lua",
+									filename = "__MoveStartingPatches__/edited-noise-programs.lua",
 									line_number = 203
 								},
 								type = "variable",
@@ -96,7 +98,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 							},
 							{
 								source_location = {
-									filename = "__MapGenTweaks__/edited-noise-programs.lua",
+									filename = "__MoveStartingPatches__/edited-noise-programs.lua",
 									line_number = 204
 								},
 								type = "variable",
@@ -105,7 +107,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 						},
 						function_name = "multiply",
 						source_location = {
-							filename = "__MapGenTweaks__/edited-noise-programs.lua",
+							filename = "__MoveStartingPatches__/edited-noise-programs.lua",
 							line_number = 205
 						},
 						type = "function-application"
@@ -113,7 +115,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 				},
 				function_name = "multiply",
 				source_location = {
-					filename = "__MapGenTweaks__/edited-noise-programs.lua",
+					filename = "__MoveStartingPatches__/edited-noise-programs.lua",
 					line_number = 205
 				},
 				type = "function-application"
@@ -121,7 +123,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 		},
 		function_name = "add",
 		source_location = {
-			filename = "__MapGenTweaks__/edited-noise-programs.lua",
+			filename = "__MoveStartingPatches__/edited-noise-programs.lua",
 			line_number = 209
 		},
 		type = "function-application"
@@ -133,9 +135,10 @@ local startSubstitutedY = makeOffsetVar("y", "starting-resources")
 local nonstartSubstitutedX = makeOffsetVar("x", "nonstarting-resources")
 local nonstartSubstitutedY = makeOffsetVar("y", "nonstarting-resources")
 
--- Note these substituted vars have wrong line numbers but that's okay, they at least point to this mod.
+-- Note these substituted vars have meanigless line numbers but that's okay, they at least point to this mod.
 
 local function hotwire(expr)
+	-- Recursively edit the autoplace expression tree to replace every x and y var with our substituted versions.
 	if expr.type == "function-application" then
 		for argName, arg in pairs(expr.arguments) do
 			if (argName == "x"
