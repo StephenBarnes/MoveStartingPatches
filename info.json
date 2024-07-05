@@ -1,12 +1,13 @@
 {
 	"name": "MoveStartingPatches",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"title": "Move Starting Patches",
 	"author": "StephenB",
 	"factorio_version": "1.1",
 	"dependencies": [
 		"base >= 1.1",
-		"? IndustrialRevolution3 >= 3.0.0"
+		"? IndustrialRevolution3 >= 3.0.0",
+		"? space-exploration >= 0.6.134"
 	],
-	"description": "Adds world options to move around the starting lake, starting resource patches, and other resource patches. Now you can build your factory north-to-south every time."
+	"description": "Adds world options to move around the starting lake and resource patches. Now you can build your factory north-to-south every time."
 }

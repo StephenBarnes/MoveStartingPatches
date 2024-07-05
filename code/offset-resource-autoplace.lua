@@ -180,5 +180,3 @@ for _, ent in pairs(data.raw.resource) do
 		end
 	end
 end
-
--- TODO: add non-starting offsets.

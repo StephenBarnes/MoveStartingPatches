@@ -1,0 +1,10 @@
+---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 06. 07. 2024
+  Bugfixes:
+    - Add partial Space Exploration support (starting patches controlled by other patch settings, other surfaces untested).
+---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+Date: 06. 07. 2024
+  Features:
+    - Initial release.
