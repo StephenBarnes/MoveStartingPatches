@@ -198,8 +198,17 @@ local function make_multioctave_modulated_noise_function(params)
 	end
 end
 
+local function multiplierToShift(mult) -- ADDED BY MOD
+	local scale1 = noise.var("control-setting:starting-lake-offset-multiplier:frequency:multiplier")
+	local scale2 = (noise.var("control-setting:starting-lake-offset-multiplier-2:frequency:multiplier") ^ 2)
+	return noise.log2(mult) * 128 / (scale1 * scale2)
+end
+
 local standard_starting_lake_elevation_expression = noise.define_noise_function( function(x,y,tile,map)
-	local starting_lake_distance = noise.distance_from(x, y, noise.var("starting_lake_positions"), 1024)
+	local xOffset = x + multiplierToShift(noise.var("control-setting:starting-lake-offset-x:frequency:multiplier")) -- ADDED BY MOD
+	local yOffset = y + multiplierToShift(noise.var("control-setting:starting-lake-offset-y:frequency:multiplier")) -- ADDED BY MOD
+	local starting_lake_distance = noise.distance_from(xOffset, yOffset, noise.var("starting_lake_positions"), 1024)
+	starting_lake_distance = starting_lake_distance * noise.var("control-setting:starting-lake-size:frequency:multiplier") -- ADDED BY MOD
 	local minimal_starting_lake_depth = 4
 	local minimal_starting_lake_bottom =
 		starting_lake_distance / 4 - minimal_starting_lake_depth +
@@ -210,6 +219,7 @@ local standard_starting_lake_elevation_expression = noise.define_noise_function(
 	local starting_cone_slope = noise.fraction(1, 16)
 	local starting_cone_offset = -1
 	local starting_cone_noise_multiplier = noise.var("starting-lake-noise-amplitude")/16
+	starting_cone_noise_multiplier = starting_cone_noise_multiplier * (noise.var("control-setting:starting-lake-regularity:frequency:multiplier") ^ 2) -- ADDED BY MOD
 	-- Second cone is intended to provide a more gradual slope and more noise
 	-- outside of the first cone in order to prevent obvious circles of cliffs.
 	-- Its bottom is clamped to a positive value so that it will only affect cliffs,
@@ -217,10 +227,11 @@ local standard_starting_lake_elevation_expression = noise.define_noise_function(
 	local second_cone_slope = noise.fraction(1, 16)
 	local second_cone_offset = 2
 	local second_cone_noise_multiplier = noise.var("starting-lake-noise-amplitude")/2
+	--starting_cone_noise_multiplier = starting_cone_noise_multiplier * (noise.var("control-setting:starting-lake-regularity:frequency:multiplier")) -- ADDED BY MOD
 
 	local starting_lake_noise = multioctave_noise{
-		x = x,
-		y = y,
+		x = xOffset, -- MODIFIED BY MOD
+		y = yOffset, -- MODIFIED BY MOD
 		seed0 = map.seed,
 		seed1 = 14, -- CorePrototypes::elevationNoiseLayer->getID().getIndex()
 		octave0_input_scale = 1/8, -- We don't want the starting lake to scale along with the rest of the map
@@ -324,43 +335,60 @@ local function clamp_aux(raw_aux)
 	return noise.clamp(raw_aux, 0, 1)
 end
 
+------------------------------------------------------------------------
+
 data:extend({
-	--{
-	--	type = "noise-expression",
-	--	name = "control-setting:starting-lake-noise-mult:multiplier",
-	--	intended_property = "starting-lake-noise-mult",
-	--	expression = noise.to_noise_expression(1),
-	--},
-	--{
-	--	type = "autoplace-control",
-	--	name = "starting-lake-roughness",
-	--	intended_property = "starting-lake-roughness",
-	--	richness = true,
-	--	order = "d-a",
-	--	category = "terrain",
-	--},
 	{
 		type = "autoplace-control",
-		name = "starting-lake-roughness",
-		intended_property = "starting-lake-roughness",
+		name = "starting-lake-size",
+		intended_property = "starting-lake-size",
 		richness = true,
 		order = "d-a",
 		category = "terrain",
 	},
 	{
 		type = "autoplace-control",
-		name = "starting-lake-size",
-		intended_property = "starting-lake-size",
+		name = "starting-lake-regularity",
+		intended_property = "starting-lake-regularity",
 		richness = true,
 		order = "d-b",
 		category = "terrain",
 	},
 	{
-		type = "noise-expression",
-		name = "starting-lake-noise-amplitude2",
-		expression = noise.define_noise_function(function(x, y, tile, map)
-			return (1 + ((noise.var("control-setting:starting-lake-roughness:frequency:multiplier") - 1) * 3)) * noise.var("control-setting:starting-lake-size:frequency:multiplier")
-		end),
+		type = "autoplace-control",
+		name = "starting-lake-offset-x",
+		intended_property = "starting-lake-offset-x",
+		richness = true,
+		order = "d-c",
+		category = "terrain",
+	},
+	{
+		type = "autoplace-control",
+		name = "starting-lake-offset-y",
+		intended_property = "starting-lake-offset-y",
+		richness = true,
+		order = "d-d",
+		category = "terrain",
+	},
+	{
+		type = "autoplace-control",
+		name = "starting-lake-offset-multiplier",
+		intended_property = "starting-lake-offset-multiplier",
+		richness = true,
+		order = "d-e",
+		category = "terrain",
+	},
+	{
+		type = "autoplace-control",
+		name = "starting-lake-offset-multiplier-2",
+		intended_property = "starting-lake-offset-multiplier-2",
+		richness = true,
+		order = "d-f",
+		category = "terrain",
 	},
 })
-data.raw["noise-expression"]["starting-lake-noise-amplitude"].expression = noise.var("starting-lake-noise-amplitude2")
+data.raw["noise-expression"]["0_17-lakes-elevation"].expression = noise.define_noise_function(function(x, y, tile, map)
+	x = x * map.segmentation_multiplier + 10000 -- Move the point where 'fractal similarity' is obvious off into the boonies
+	y = y * map.segmentation_multiplier
+	return finish_elevation(make_0_12like_lakes(x, y, tile, map), map)
+end)
