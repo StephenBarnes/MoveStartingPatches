@@ -5,7 +5,7 @@ data:extend({
 		name = "starting-lake-size",
 		intended_property = "starting-lake-size",
 		richness = true,
-		order = "d-a",
+		order = "z-a",
 		category = "terrain",
 	},
 	{
@@ -13,7 +13,7 @@ data:extend({
 		name = "starting-lake-regularity",
 		intended_property = "starting-lake-regularity",
 		richness = true,
-		order = "d-b",
+		order = "z-b",
 		category = "terrain",
 	},
 	{
@@ -21,7 +21,7 @@ data:extend({
 		name = "starting-lake-offset-x",
 		intended_property = "starting-lake-offset-x",
 		richness = true,
-		order = "d-c",
+		order = "z-c-a",
 		category = "terrain",
 	},
 	{
@@ -29,7 +29,7 @@ data:extend({
 		name = "starting-lake-offset-y",
 		intended_property = "starting-lake-offset-y",
 		richness = true,
-		order = "d-d",
+		order = "z-c-b",
 		category = "terrain",
 	},
 	{
@@ -37,7 +37,7 @@ data:extend({
 		name = "starting-lake-offset-multiplier",
 		intended_property = "starting-lake-offset-multiplier",
 		richness = true,
-		order = "d-e",
+		order = "z-c-c",
 		category = "terrain",
 	},
 	{
@@ -45,7 +45,7 @@ data:extend({
 		name = "starting-resources-offset-x",
 		intended_property = "starting-resources-offset-x",
 		richness = true,
-		order = "d-g",
+		order = "z-d-a",
 		category = "resource",
 	},
 	{
@@ -53,7 +53,7 @@ data:extend({
 		name = "starting-resources-offset-y",
 		intended_property = "starting-resources-offset-y",
 		richness = true,
-		order = "d-h",
+		order = "z-d-b",
 		category = "resource",
 	},
 	{
@@ -61,7 +61,31 @@ data:extend({
 		name = "starting-resources-offset-multiplier",
 		intended_property = "starting-resources-offset-multiplier",
 		richness = true,
-		order = "d-i",
+		order = "z-d-c",
+		category = "resource",
+	},
+	{
+		type = "autoplace-control",
+		name = "nonstarting-resources-offset-x",
+		intended_property = "nonstarting-resources-offset-x",
+		richness = true,
+		order = "z-e-a",
+		category = "resource",
+	},
+	{
+		type = "autoplace-control",
+		name = "nonstarting-resources-offset-y",
+		intended_property = "nonstarting-resources-offset-y",
+		richness = true,
+		order = "z-e-b",
+		category = "resource",
+	},
+	{
+		type = "autoplace-control",
+		name = "nonstarting-resources-offset-multiplier",
+		intended_property = "nonstarting-resources-offset-multiplier",
+		richness = true,
+		order = "z-e-c",
 		category = "resource",
 	},
 })

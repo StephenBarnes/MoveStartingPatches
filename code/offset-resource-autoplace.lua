@@ -14,187 +14,105 @@
 -- y = { source_location = { filename = "__core__/lualib/resource-autoplace.lua", line_number = 289 }, type = "variable", variable_name = "y" }
 -- We want to replace the x and y that are on lines 288 and 289.
 
-local substitutedX = {
-	arguments = {
-		{
-			source_location = {
-				filename = "__core__/lualib/noise.lua",
-				line_number = 273
-			},
-			type = "variable",
-			variable_name = "x"
-		},
-		{
-			arguments = {
-				{
-					arguments = {
-						{
-							arguments = {
-								{
-									source_location = {
-										filename = "__MapGenTweaks__/edited-noise-programs.lua",
-										line_number = 209
-									},
-									type = "variable",
-									variable_name = "control-setting:starting-resources-offset-x:frequency:multiplier"
-								}
-							},
-							function_name = "log2",
-							source_location = {
-								filename = "__MapGenTweaks__/edited-noise-programs.lua",
-								line_number = 205
-							},
-							type = "function-application"
-						},
-						{
-							literal_value = -32,
-							source_location = {
-								filename = "__core__/lualib/noise.lua",
-								line_number = 78
-							},
-							type = "literal-number"
-						}
-					},
-					function_name = "multiply",
-					source_location = {
-						filename = "__MapGenTweaks__/edited-noise-programs.lua",
-						line_number = 205
-					},
-					type = "function-application"
+local function makeOffsetVar(varName, offsetArgsName)
+	-- eg varName == "x", offsetArgsName == "starting-resources"
+	return {
+		arguments = {
+			{
+				source_location = {
+					filename = "__core__/lualib/noise.lua",
+					line_number = 273
 				},
-				{
-					arguments = {
-						{
-							source_location = {
-								filename = "__MapGenTweaks__/edited-noise-programs.lua",
-								line_number = 203
+				type = "variable",
+				variable_name = varName,
+			},
+			{
+				arguments = {
+					{
+						arguments = {
+							{
+								arguments = {
+									{
+										source_location = {
+											filename = "__MapGenTweaks__/edited-noise-programs.lua",
+											line_number = 209
+										},
+										type = "variable",
+										variable_name =
+										"control-setting:"..offsetArgsName.."-offset-"..varName..":frequency:multiplier"
+									}
+								},
+								function_name = "log2",
+								source_location = {
+									filename = "__MapGenTweaks__/edited-noise-programs.lua",
+									line_number = 205
+								},
+								type = "function-application"
 							},
-							type = "variable",
-							variable_name = "control-setting:starting-resources-offset-multiplier:frequency:multiplier"
+							{
+								literal_value = -32,
+								source_location = {
+									filename = "__core__/lualib/noise.lua",
+									line_number = 78
+								},
+								type = "literal-number"
+							}
 						},
-						{
-							source_location = {
-								filename = "__MapGenTweaks__/edited-noise-programs.lua",
-								line_number = 204
+						function_name = "multiply",
+						source_location = {
+							filename = "__MapGenTweaks__/edited-noise-programs.lua",
+							line_number = 205
+						},
+						type = "function-application"
+					},
+					{
+						arguments = {
+							{
+								source_location = {
+									filename = "__MapGenTweaks__/edited-noise-programs.lua",
+									line_number = 203
+								},
+								type = "variable",
+								variable_name = "control-setting:"..offsetArgsName.."-offset-multiplier:frequency:multiplier"
 							},
-							type = "variable",
-							variable_name = "control-setting:starting-resources-offset-multiplier:frequency:multiplier"
-						}
-					},
-					function_name = "multiply",
-					source_location = {
-						filename = "__MapGenTweaks__/edited-noise-programs.lua",
-						line_number = 205
-					},
-					type = "function-application"
-				}
-			},
-			function_name = "multiply",
-			source_location = {
-				filename = "__MapGenTweaks__/edited-noise-programs.lua",
-				line_number = 205
-			},
-			type = "function-application"
-		}
-	},
-	function_name = "add",
-	source_location = {
-		filename = "__MapGenTweaks__/edited-noise-programs.lua",
-		line_number = 209
-	},
-	type = "function-application"
-}
+							{
+								source_location = {
+									filename = "__MapGenTweaks__/edited-noise-programs.lua",
+									line_number = 204
+								},
+								type = "variable",
+								variable_name = "control-setting:"..offsetArgsName.."-offset-multiplier:frequency:multiplier"
+							}
+						},
+						function_name = "multiply",
+						source_location = {
+							filename = "__MapGenTweaks__/edited-noise-programs.lua",
+							line_number = 205
+						},
+						type = "function-application"
+					}
+				},
+				function_name = "multiply",
+				source_location = {
+					filename = "__MapGenTweaks__/edited-noise-programs.lua",
+					line_number = 205
+				},
+				type = "function-application"
+			}
+		},
+		function_name = "add",
+		source_location = {
+			filename = "__MapGenTweaks__/edited-noise-programs.lua",
+			line_number = 209
+		},
+		type = "function-application"
+	}
+end
 
-local substitutedY = {
-	arguments = {
-		{
-			source_location = {
-				filename = "__core__/lualib/noise.lua",
-				line_number = 273
-			},
-			type = "variable",
-			variable_name = "y"
-		},
-		{
-			arguments = {
-				{
-					arguments = {
-						{
-							arguments = {
-								{
-									source_location = {
-										filename = "__MapGenTweaks__/edited-noise-programs.lua",
-										line_number = 209
-									},
-									type = "variable",
-									variable_name = "control-setting:starting-resources-offset-y:frequency:multiplier"
-								}
-							},
-							function_name = "log2",
-							source_location = {
-								filename = "__MapGenTweaks__/edited-noise-programs.lua",
-								line_number = 205
-							},
-							type = "function-application"
-						},
-						{
-							literal_value = -32,
-							source_location = {
-								filename = "__core__/lualib/noise.lua",
-								line_number = 78
-							},
-							type = "literal-number"
-						}
-					},
-					function_name = "multiply",
-					source_location = {
-						filename = "__MapGenTweaks__/edited-noise-programs.lua",
-						line_number = 205
-					},
-					type = "function-application"
-				},
-				{
-					arguments = {
-						{
-							source_location = {
-								filename = "__MapGenTweaks__/edited-noise-programs.lua",
-								line_number = 203
-							},
-							type = "variable",
-							variable_name = "control-setting:starting-resources-offset-multiplier:frequency:multiplier"
-						},
-						{
-							source_location = {
-								filename = "__MapGenTweaks__/edited-noise-programs.lua",
-								line_number = 204
-							},
-							type = "variable",
-							variable_name = "control-setting:starting-resources-offset-multiplier:frequency:multiplier"
-						}
-					},
-					function_name = "multiply",
-					source_location = {
-						filename = "__MapGenTweaks__/edited-noise-programs.lua",
-						line_number = 205
-					},
-					type = "function-application"
-				}
-			},
-			function_name = "multiply",
-			source_location = {
-				filename = "__MapGenTweaks__/edited-noise-programs.lua",
-				line_number = 205
-			},
-			type = "function-application"
-		}
-	},
-	function_name = "add",
-	source_location = {
-		filename = "__MapGenTweaks__/edited-noise-programs.lua",
-		line_number = 209
-	},
-	type = "function-application"
-}
+local startSubstitutedX = makeOffsetVar("x", "starting-resources")
+local startSubstitutedY = makeOffsetVar("y", "starting-resources")
+local nonstartSubstitutedX = makeOffsetVar("x", "nonstarting-resources")
+local nonstartSubstitutedY = makeOffsetVar("y", "nonstarting-resources")
 
 -- Note these substituted vars have wrong line numbers but that's okay, they at least point to this mod.
 
@@ -207,7 +125,7 @@ local function hotwire(expr)
 					and arg.source_location
 					and arg.source_location.filename == "__core__/lualib/resource-autoplace.lua"
 					and arg.source_location.line_number == 288) then
-				expr.arguments[argName] = substitutedX
+				expr.arguments[argName] = startSubstitutedX
 				log("Substituted an X")
 			elseif (argName == "y"
 					and arg.type == "variable"
@@ -215,7 +133,7 @@ local function hotwire(expr)
 					and arg.source_location
 					and arg.source_location.filename == "__core__/lualib/resource-autoplace.lua"
 					and arg.source_location.line_number == 289) then
-				expr.arguments[argName] = substitutedY
+				expr.arguments[argName] = startSubstitutedY
 				log("Substituted a Y")
 			elseif arg.type == "function-application" then
 				hotwire(arg)
