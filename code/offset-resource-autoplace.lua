@@ -78,7 +78,7 @@ local substitutedX = {
 								line_number = 204
 							},
 							type = "variable",
-							variable_name = "control-setting:starting-resources-offset-multiplier-2:frequency:multiplier"
+							variable_name = "control-setting:starting-resources-offset-multiplier:frequency:multiplier"
 						}
 					},
 					function_name = "multiply",
@@ -169,7 +169,7 @@ local substitutedY = {
 								line_number = 204
 							},
 							type = "variable",
-							variable_name = "control-setting:starting-resources-offset-multiplier-2:frequency:multiplier"
+							variable_name = "control-setting:starting-resources-offset-multiplier:frequency:multiplier"
 						}
 					},
 					function_name = "multiply",
@@ -240,3 +240,5 @@ for _, ent in pairs(data.raw.resource) do
 		end
 	end
 end
+
+-- TODO: add non-starting offsets.

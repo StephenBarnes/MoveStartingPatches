@@ -42,14 +42,6 @@ data:extend({
 	},
 	{
 		type = "autoplace-control",
-		name = "starting-lake-offset-multiplier-2",
-		intended_property = "starting-lake-offset-multiplier-2",
-		richness = true,
-		order = "d-f",
-		category = "terrain",
-	},
-	{
-		type = "autoplace-control",
 		name = "starting-resources-offset-x",
 		intended_property = "starting-resources-offset-x",
 		richness = true,
@@ -70,14 +62,6 @@ data:extend({
 		intended_property = "starting-resources-offset-multiplier",
 		richness = true,
 		order = "d-i",
-		category = "resource",
-	},
-	{
-		type = "autoplace-control",
-		name = "starting-resources-offset-multiplier-2",
-		intended_property = "starting-resources-offset-multiplier-2",
-		richness = true,
-		order = "d-j",
 		category = "resource",
 	},
 })

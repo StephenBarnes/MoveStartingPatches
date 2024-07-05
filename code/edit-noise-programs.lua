@@ -200,9 +200,8 @@ local function make_multioctave_modulated_noise_function(params)
 end
 
 local function multiplierToShift(mult) -- ADDED BY MOD
-	local scale1 = noise.var("control-setting:starting-lake-offset-multiplier:frequency:multiplier")
-	local scale2 = noise.var("control-setting:starting-lake-offset-multiplier-2:frequency:multiplier")
-	return noise.log2(mult) * 32 / (scale1 * scale2)
+	local scale = noise.var("control-setting:starting-lake-offset-multiplier:frequency:multiplier")
+	return noise.log2(mult) * 32 / (scale*scale)
 end
 
 local standard_starting_lake_elevation_expression = noise.define_noise_function( function(x,y,tile,map)
