@@ -324,320 +324,43 @@ local function clamp_aux(raw_aux)
 	return noise.clamp(raw_aux, 0, 1)
 end
 
-data:extend{
+data:extend({
+	--{
+	--	type = "noise-expression",
+	--	name = "control-setting:starting-lake-noise-mult:multiplier",
+	--	intended_property = "starting-lake-noise-mult",
+	--	expression = noise.to_noise_expression(1),
+	--},
+	--{
+	--	type = "autoplace-control",
+	--	name = "starting-lake-roughness",
+	--	intended_property = "starting-lake-roughness",
+	--	richness = true,
+	--	order = "d-a",
+	--	category = "terrain",
+	--},
 	{
-		type = "noise-expression",
-		name = "temperature",
-		intended_property = "temperature",
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			x = x * noise.var("control-setting:temperature:frequency:multiplier") + 40000 -- Move the point where 'fractal similarity' is obvious off into the boonies
-			y = y * noise.var("control-setting:temperature:frequency:multiplier")
-			local base_temp =
-				average_sea_level_temperature +
-				make_multioctave_noise_function(map.seed, 5, 4, 3)(x,y,1/32,1/20) +
-				noise.var("control-setting:temperature:bias")
-			local elevation_adjusted_temperature = base_temp + noise.var("elevation") * elevation_temperature_gradient
-			return noise.ident(clamp_temperature(elevation_adjusted_temperature))
-		end)
+		type = "autoplace-control",
+		name = "starting-lake-roughness",
+		intended_property = "starting-lake-roughness",
+		richness = true,
+		order = "d-a",
+		category = "terrain",
+	},
+	{
+		type = "autoplace-control",
+		name = "starting-lake-size",
+		intended_property = "starting-lake-size",
+		richness = true,
+		order = "d-b",
+		category = "terrain",
 	},
 	{
 		type = "noise-expression",
-		name = "debug-temperature",
-		intended_property = debug_property("temperature"),
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			return noise.ident(clamp_temperature(x * (1 / 4)))
-		end)
+		name = "starting-lake-noise-amplitude2",
+		expression = noise.define_noise_function(function(x, y, tile, map)
+			return (1 + ((noise.var("control-setting:starting-lake-roughness:frequency:multiplier") - 1) * 3)) * noise.var("control-setting:starting-lake-size:frequency:multiplier")
+		end),
 	},
-	{
-		type = "noise-expression",
-		name = "moisture",
-		intended_property = "moisture",
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			x = x * noise.var("control-setting:moisture:frequency:multiplier") + 30000 -- Move the point where 'fractal similarity' is obvious off into the boonies
-			y = y * noise.var("control-setting:moisture:frequency:multiplier")
-			local raw_moisture =
-				3/8 +
-				make_multioctave_noise_function(map.seed, 6, 4, 1.5, 1/3)(x,y,1/256,1/8) +
-				noise.var("control-setting:moisture:bias")
-			return noise.ident(clamp_moisture(raw_moisture))
-		end)
-	},
-	{
-		type = "noise-expression",
-		name = "debug-moisture",
-		intended_property = debug_property("moisture"),
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			return noise.ident(clamp_moisture(y * (1 / 400)))
-		end)
-	},
-	{
-		type = "noise-expression",
-		name = "aux",
-		intended_property = "aux",
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			x = x * noise.var("control-setting:aux:frequency:multiplier") + 20000 -- Move the point where 'fractal similarity' is obvious off into the boonies
-			y = y * noise.var("control-setting:aux:frequency:multiplier")
-			local raw_aux =
-				0.5 +
-				make_multioctave_noise_function(map.seed, 7, 4, 1/2, 3)(x,y,1/2048,1/4) +
-				noise.var("control-setting:aux:bias")
-			return noise.ident(clamp_aux(raw_aux))
-		end)
-	},
-	{
-		type = "noise-expression",
-		name = "debug-aux",
-		intended_property = debug_property("aux"),
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			-- Tile peaks tend to be based on aux+water,
-			-- so let's use the same dimension as temperature for aux
-			return noise.ident(clamp_aux(x * (1 / 400)))
-		end)
-	},
-	{
-		type = "noise-expression",
-		name = "rings",
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			return noise.ident(noise.ridge(tile.distance / 4, -32, 32))
-		end)
-	},
-	{
-		type = "noise-expression",
-		name = "0_17-lakes-elevation",
-		-- Large lakes similar to those from Factorio 0.12
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			x = x * map.segmentation_multiplier + 10000 -- Move the point where 'fractal similarity' is obvious off into the boonies
-			y = y * map.segmentation_multiplier
-			return finish_elevation(make_0_12like_lakes(x, y, tile, map), map)
-		end)
-	},
-	{
-		type = "noise-expression",
-		name = "0_17-starting-plateau",
-		intended_property = debug_property("elevation"),
-		-- The starting area plateau surrounded by an endless ocean
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			x = x * map.segmentation_multiplier + 10000 -- Move the point where 'fractal similarity' is obvious off into the boonies
-			y = y * map.segmentation_multiplier
-			options =
-			{
-				bias = -1000
-			}
-			return finish_elevation(make_0_12like_lakes(x, y, tile, map, options), map)
-		end)
-	},
-	{
-		type = "noise-expression",
-		name = "0_17-island",
-		intended_property = "elevation",
-		-- A large island surrounded by an endless ocean
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			map = util.merge
-			{
-				map,
-				{ segmentation_multiplier = map.segmentation_multiplier / 4 }
-			}
-			x = x * map.segmentation_multiplier + 10000 -- Move the point where 'fractal similarity' is obvious off into the boonies
-			y = y * map.segmentation_multiplier
-			options =
-			{
-				bias = -1000
-			}
-			return finish_elevation(make_0_12like_lakes(x, y, tile, map, options), map)
-		end)
-	},
-	{
-		type = "noise-expression",
-		name = "0_17-islands+continents",
-		intended_property = debug_property("elevation"),
-		--Similar to lakes, but with a negative bias instead of a positive one
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			x = x * map.segmentation_multiplier + 10000 -- Move the point where 'fractal similarity' is obvious off into the boonies
-			y = y * map.segmentation_multiplier
-			options =
-			{
-				bias = -80,
-				terrain_octaves = 10
-			}
-			return finish_elevation(make_0_12like_lakes(x, y, tile, map, options), map)
-		end)
-	},
-	{
-		type = "noise-expression",
-		name = "endless-plateau-with-starting-area-elevation",
-		intended_property = debug_property("elevation"),
-		-- A big plateau, except for the starting area
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			return finish_elevation(100, map)
-		end)
-	},
-	{
-		type = "noise-expression",
-		name = "0_16-elevation",
-		intended_property = debug_property("elevation"),
-		-- Elevation function often described as 'swampy' from 0.16
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			local plateau_octaves = 3
-			local lf_octaves = 6
-			-- Everyone except TOGoS (apparently) likes there to not be much water
-			-- when water-level = 'normal', so shift the elevation up everywhere.
-			-- Set water-level = 'high' if you like oceans.
-			local global_bias = 6
-
-			-- Sometimes we want to use actual coordinates,
-			-- not the warped-to-compensate-for-fractal-similarity ones
-			local map_x = x
-			local map_y = y
-
-			x = x * map.segmentation_multiplier + 10000 -- Move the point where 'fractal similarity' is obvious off into the boonies
-			y = y * map.segmentation_multiplier
-			local rdi = tile.tier / 8 -- ridge distance-based influcence
-			local high_ridge =	16 + rdi + noise.clamp(rdi, 0, 2) * make_multioctave_noise_function(map.seed, 7, 2, 3)(x,y,1/256,1)
-			local low_ridge	= -16 - rdi
-
-			local plateau_noise = make_multioctave_noise_function(map.seed, 9, plateau_octaves, 1/3, 3, 4, 1/128)
-			local plateaus = noise.max(make_basis_noise_function(map.seed, 10, 8, 1/1024)(x,y) - 8, 1 - tile.tier)
-
-			local high_freq_noise = make_multioctave_modulated_noise_function{
-				seed0 = map.seed,
-				seed1 = 11,
-				octave_count = 6,
-				octave0_output_scale = 1/8,
-				octave0_input_scale = 1/4,
-				octave_output_scale_multiplier = 2,
-				octave_input_scale_multiplier = 1/3
-			}
-			local low_freq_noise = make_multioctave_modulated_noise_function{
-				seed0 = map.seed,
-				seed1 = 8,
-				octave_count = lf_octaves,
-				octave0_output_scale = 1,
-				octave0_input_scale = 1/8
-			}
-			local very_low_freq_noise = make_basis_noise_function(map.seed, 9, 20, 1/1024)
-			local basis = low_freq_noise(x,y) + very_low_freq_noise(x,y)
-			local ridged1 = noise.ridge(basis, low_ridge, high_ridge)
-
-			local normal = noise.max(ridged1 + high_freq_noise(x,y), plateaus + plateau_noise(x,y)) + global_bias
-
-			-- Multily elevation by low-frequency noise to make hilly and non-hilly areas
-			local hill_modulation = noise.clamp(make_multioctave_noise_function(map.seed, 12, 4, 2, 1/3)(x,y,1/256,3/4) - 2, 0.1, 1.0)
-
-			-- Elevation below which hill modulation has no effect.
-			-- Set to slightly above the water level so that flat plains don't all become a giant beach/sandbar thing.
-			-- To do its job it just has to be lower than the first row of cliffs.
-			local hill_modulation_identity = 3 - map.wlc_elevation_offset
-
-			local hill_modulated = noise.min(
-				normal,
-				hill_modulation * (normal - hill_modulation_identity) + hill_modulation_identity
-			)
-
-			return noise.ident(finish_elevation(hill_modulated, map))
-		end)
-	},
-	{
-		type = "noise-expression",
-		name = "elevation",
-		intended_property = "elevation",
-		expression = noise.var("0_17-lakes-elevation")
-	},
-	{
-		type = "noise-expression",
-		name = "cliffiness",
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			-- Idea is that elevation function determines general placement of 'mountainey' areas.
-			-- 'cliffiness' only determines small-scale placement, to ensure that there are passages
-			-- through any sufficiently long cliff face.
-			return 0.5 + noise.clamp(
-				make_multioctave_noise_function(map.seed, 123, 2, 1, 1/3)(x,y,1/32,1) +
-				noise.log2(noise.var("control-setting:cliffs:richness:multiplier")) / 2,
-				0, 1)
-		end)
-	},
-
-	-- Variables used by autoplace:
-
-	{
-		type = "noise-expression",
-		name = "distance",
-		expression = noise.distance_from(noise.var("x"), noise.var("y"), noise.var("starting_positions"))
-	},
-	{
-		type = "noise-expression",
-		name = "tier_from_start",
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			return noise.max(0.0, tile.distance - map.starting_area_radius) / map.starting_area_radius;
-		end)
-	},
-	{
-		type = "noise-expression",
-		name = "tier",
-		expression = noise.var("tier_from_start")
-	},
-	{
-		type = "noise-expression",
-		name = "starting_area_weight",
-		expression = noise.define_noise_function( function(x,y,tile,map)
-			return 1 - noise.min(1.0, tile.tier / 2.0)
-		end)
-	}
-}
-
-local function add_climate_control_defaults(control_name)
-	data:extend
-	{
-		{
-			type = "noise-expression",
-			name = "control-setting:" .. control_name .. ":frequency:multiplier",
-			expression = noise.to_noise_expression(1)
-		},
-		{
-			type = "noise-expression",
-			name = "control-setting:" .. control_name .. ":bias",
-			expression = noise.to_noise_expression(0)
-		}
-	}
-end
-
--- Generate a bunch of options for a property
--- Do like data:extend(fractional_options("some-noise-property"))
-local function fractional_options(property)
-	local opts = {}
-	local den = 4
-	local next_non_default_order = 3000
-	for i, num in ipairs({1,2,3,4,6,8,12,16}) do
-		if num == den then
-			order = 2000 -- Default value should be 1
-		else
-			order = next_non_default_order
-			next_non_default_order = next_non_default_order + 1
-		end
-		opts[#opts+1] =
-		{
-			type = "noise-expression",
-			name = property .. "-" .. num .. "-" .. den,
-			intended_property = property,
-			order = order,
-			expression = noise.fraction(num, den)
-		}
-	end
-	return opts
-end
-
-data:extend
-{
-	{
-		type = "noise-expression",
-		name = "starting-lake-noise-amplitude",
-		expression = noise.to_noise_expression(1)
-	}
-}
-
-if enable_debug_expressions then
-	data:extend(fractional_options("starting-lake-noise-amplitude"))
-end
-
-add_climate_control_defaults("temperature")
-add_climate_control_defaults("moisture")
-add_climate_control_defaults("aux")
+})
+data.raw["noise-expression"]["starting-lake-noise-amplitude"].expression = noise.var("starting-lake-noise-amplitude2")
