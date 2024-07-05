@@ -1,0 +1,10 @@
+{
+	"name": "MapGenTweaks",
+	"version": "1.0.0",
+	"title": "Map Gen Tweaks",
+	"author": "StephenB",
+	"factorio_version": "1.1",
+	"dependencies": 
+	[ "base >= 1.1" ],
+	"description": "Tweaks for the default map gen."
+}
