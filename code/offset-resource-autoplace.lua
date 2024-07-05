@@ -9,10 +9,11 @@
 -- Another option:
 -- We could look through the actual AutoplaceSpecification parse-tree thing recursively, and look for any value of the "x" or "y" vars.
 -- When we find one, replace it with an offset version.
+-- We can differentiate between starting and non-starting patches by checking the filename and line number they use for x/y. (This is very cool and very funny, and does not have any downsides.)
 
+-- X and Y in the starting patches look like this:
 -- x = { source_location = { filename = "__core__/lualib/resource-autoplace.lua", line_number = 288 }, type = "variable", variable_name = "x" },
 -- y = { source_location = { filename = "__core__/lualib/resource-autoplace.lua", line_number = 289 }, type = "variable", variable_name = "y" }
--- We want to replace the x and y that are on lines 288 and 289.
 
 local function makeOffsetVar(varName, offsetArgsName)
 	-- eg varName == "x", offsetArgsName == "starting-resources"
@@ -50,7 +51,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 								type = "function-application"
 							},
 							{
-								literal_value = -32,
+								literal_value = -64,
 								source_location = {
 									filename = "__core__/lualib/noise.lua",
 									line_number = 78
@@ -122,27 +123,29 @@ local function hotwire(expr)
 			if (argName == "x"
 					and arg.type == "variable"
 					and arg.variable_name == "x"
-					and arg.source_location
-					and arg.source_location.filename == "__core__/lualib/resource-autoplace.lua"
-					and arg.source_location.line_number == 288) then
-				expr.arguments[argName] = startSubstitutedX
-				log("Substituted an X")
+					and arg.source_location) then
+				if (arg.source_location.filename == "__core__/lualib/resource-autoplace.lua"
+						and arg.source_location.line_number == 288) then
+					expr.arguments[argName] = startSubstitutedX
+				else
+					expr.arguments[argName] = nonstartSubstitutedX
+				end
 			elseif (argName == "y"
 					and arg.type == "variable"
 					and arg.variable_name == "y"
-					and arg.source_location
-					and arg.source_location.filename == "__core__/lualib/resource-autoplace.lua"
-					and arg.source_location.line_number == 289) then
-				expr.arguments[argName] = startSubstitutedY
-				log("Substituted a Y")
+					and arg.source_location) then
+				if (arg.source_location.filename == "__core__/lualib/resource-autoplace.lua"
+						and arg.source_location.line_number == 289) then
+					expr.arguments[argName] = startSubstitutedY
+				else
+					expr.arguments[argName] = nonstartSubstitutedY
+				end
 			elseif arg.type == "function-application" then
 				hotwire(arg)
 			elseif arg.type == "procedure-delimiter" then
 				hotwire(arg.expression)
-			else
-				if arg.type ~= "literal-number" and arg.type ~= "variable" then
-					log("Unknown arg type: " .. arg.type)
-				end
+			--elseif arg.type ~= "literal-number" and arg.type ~= "variable" then
+			--	log("Unknown arg type: " .. arg.type)
 			end
 		end
 	end

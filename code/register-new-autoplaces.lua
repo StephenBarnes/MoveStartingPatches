@@ -5,7 +5,7 @@ data:extend({
 		name = "starting-lake-size",
 		intended_property = "starting-lake-size",
 		richness = true,
-		order = "z-a",
+		order = "zzz-a",
 		category = "terrain",
 	},
 	{
@@ -13,7 +13,7 @@ data:extend({
 		name = "starting-lake-regularity",
 		intended_property = "starting-lake-regularity",
 		richness = true,
-		order = "z-b",
+		order = "zzz-b",
 		category = "terrain",
 	},
 	{
@@ -21,7 +21,7 @@ data:extend({
 		name = "starting-lake-offset-x",
 		intended_property = "starting-lake-offset-x",
 		richness = true,
-		order = "z-c-a",
+		order = "zzz-c-a",
 		category = "terrain",
 	},
 	{
@@ -29,7 +29,7 @@ data:extend({
 		name = "starting-lake-offset-y",
 		intended_property = "starting-lake-offset-y",
 		richness = true,
-		order = "z-c-b",
+		order = "zzz-c-b",
 		category = "terrain",
 	},
 	{
@@ -37,7 +37,7 @@ data:extend({
 		name = "starting-lake-offset-multiplier",
 		intended_property = "starting-lake-offset-multiplier",
 		richness = true,
-		order = "z-c-c",
+		order = "zzz-c-c",
 		category = "terrain",
 	},
 	{
@@ -45,7 +45,7 @@ data:extend({
 		name = "starting-resources-offset-x",
 		intended_property = "starting-resources-offset-x",
 		richness = true,
-		order = "z-d-a",
+		order = "zzz-d-a",
 		category = "resource",
 	},
 	{
@@ -53,7 +53,7 @@ data:extend({
 		name = "starting-resources-offset-y",
 		intended_property = "starting-resources-offset-y",
 		richness = true,
-		order = "z-d-b",
+		order = "zzz-d-b",
 		category = "resource",
 	},
 	{
@@ -61,7 +61,7 @@ data:extend({
 		name = "starting-resources-offset-multiplier",
 		intended_property = "starting-resources-offset-multiplier",
 		richness = true,
-		order = "z-d-c",
+		order = "zzz-d-c",
 		category = "resource",
 	},
 	{
@@ -69,7 +69,7 @@ data:extend({
 		name = "nonstarting-resources-offset-x",
 		intended_property = "nonstarting-resources-offset-x",
 		richness = true,
-		order = "z-e-a",
+		order = "zzz-e-a",
 		category = "resource",
 	},
 	{
@@ -77,7 +77,7 @@ data:extend({
 		name = "nonstarting-resources-offset-y",
 		intended_property = "nonstarting-resources-offset-y",
 		richness = true,
-		order = "z-e-b",
+		order = "zzz-e-b",
 		category = "resource",
 	},
 	{
@@ -85,7 +85,7 @@ data:extend({
 		name = "nonstarting-resources-offset-multiplier",
 		intended_property = "nonstarting-resources-offset-multiplier",
 		richness = true,
-		order = "z-e-c",
+		order = "zzz-e-c",
 		category = "resource",
 	},
 })
