@@ -15,6 +15,24 @@
 -- x = { source_location = { filename = "__core__/lualib/resource-autoplace.lua", line_number = 288 }, type = "variable", variable_name = "x" },
 -- y = { source_location = { filename = "__core__/lualib/resource-autoplace.lua", line_number = 289 }, type = "variable", variable_name = "y" }
 
+local function isStartingVariable(var)
+	-- For vanilla
+	if (var.source_location.filename == "__core__/lualib/resource-autoplace.lua"
+			and var.source_location.line_number >= 285
+			and var.source_location.line_number <= 295) then
+		return true
+	end
+
+	-- For Industrial Revolution 3 - it uses a copy of vanilla's file with some constants adjusted.
+	if (var.source_location.filename == "__IndustrialRevolution3__/code/terrain/resource-autoplace.lua"
+			and var.source_location.line_number >= 300
+			and var.source_location.line_number <= 310) then
+		return true
+	end
+
+	return false
+end
+
 local function makeOffsetVar(varName, offsetArgsName)
 	-- eg varName == "x", offsetArgsName == "starting-resources"
 	return {
@@ -124,8 +142,7 @@ local function hotwire(expr)
 					and arg.type == "variable"
 					and arg.variable_name == "x"
 					and arg.source_location) then
-				if (arg.source_location.filename == "__core__/lualib/resource-autoplace.lua"
-						and arg.source_location.line_number == 288) then
+				if isStartingVariable(arg) then
 					expr.arguments[argName] = startSubstitutedX
 				else
 					expr.arguments[argName] = nonstartSubstitutedX
@@ -134,8 +151,7 @@ local function hotwire(expr)
 					and arg.type == "variable"
 					and arg.variable_name == "y"
 					and arg.source_location) then
-				if (arg.source_location.filename == "__core__/lualib/resource-autoplace.lua"
-						and arg.source_location.line_number == 289) then
+				if isStartingVariable(arg) then
 					expr.arguments[argName] = startSubstitutedY
 				else
 					expr.arguments[argName] = nonstartSubstitutedY

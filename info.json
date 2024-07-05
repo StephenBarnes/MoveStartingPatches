@@ -1,10 +1,12 @@
 {
-	"name": "MapGenTweaks",
+	"name": "MoveStartingPatches",
 	"version": "1.0.0",
-	"title": "Map Gen Tweaks",
+	"title": "Move Starting Patches",
 	"author": "StephenB",
 	"factorio_version": "1.1",
-	"dependencies": 
-	[ "base >= 1.1" ],
-	"description": "Tweaks for the default map gen."
+	"dependencies": [
+		"base >= 1.1",
+		"? IndustrialRevolution3 >= 3.0.0"
+	],
+	"description": "Adds world options to move around the starting resource patches and the starting lake."
 }
