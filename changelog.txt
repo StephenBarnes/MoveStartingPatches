@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 06. 07. 2024
+  Bugfixes:
+    - Add RSO incompatibility.
+    - Change Space Exploration dependency to hidden so people don't think it's supported.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.1
 Date: 06. 07. 2024
   Bugfixes:
