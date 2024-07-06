@@ -10,5 +10,5 @@
 		"(?) space-exploration >= 0.6.134",
 		"! rso-mod"
 	],
-	"description": "Adds world options to move around the starting lake and resource patches. Now you can build your factory north-to-south every time."
+	"description": "Now you can build your factory north-to-south every time. Adds world options to move around the starting lake and resource patches."
 }

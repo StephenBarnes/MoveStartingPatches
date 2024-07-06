@@ -41,7 +41,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 		arguments = {
 			{
 				source_location = {
-					filename = "__core__/lualib/noise.lua",
+					filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
 					line_number = 273
 				},
 				type = "variable",
@@ -55,7 +55,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 								arguments = {
 									{
 										source_location = {
-											filename = "__MoveStartingPatches__/edited-noise-programs.lua",
+											filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
 											line_number = 209
 										},
 										type = "variable",
@@ -65,7 +65,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 								},
 								function_name = "log2",
 								source_location = {
-									filename = "__MoveStartingPatches__/edited-noise-programs.lua",
+									filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
 									line_number = 205
 								},
 								type = "function-application"
@@ -73,7 +73,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 							{
 								literal_value = -64,
 								source_location = {
-									filename = "__core__/lualib/noise.lua",
+									filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
 									line_number = 78
 								},
 								type = "literal-number"
@@ -81,7 +81,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 						},
 						function_name = "multiply",
 						source_location = {
-							filename = "__MoveStartingPatches__/edited-noise-programs.lua",
+							filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
 							line_number = 205
 						},
 						type = "function-application"
@@ -90,7 +90,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 						arguments = {
 							{
 								source_location = {
-									filename = "__MoveStartingPatches__/edited-noise-programs.lua",
+									filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
 									line_number = 203
 								},
 								type = "variable",
@@ -98,7 +98,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 							},
 							{
 								source_location = {
-									filename = "__MoveStartingPatches__/edited-noise-programs.lua",
+									filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
 									line_number = 204
 								},
 								type = "variable",
@@ -107,7 +107,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 						},
 						function_name = "multiply",
 						source_location = {
-							filename = "__MoveStartingPatches__/edited-noise-programs.lua",
+							filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
 							line_number = 205
 						},
 						type = "function-application"
@@ -115,7 +115,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 				},
 				function_name = "multiply",
 				source_location = {
-					filename = "__MoveStartingPatches__/edited-noise-programs.lua",
+					filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
 					line_number = 205
 				},
 				type = "function-application"
@@ -123,7 +123,7 @@ local function makeOffsetVar(varName, offsetArgsName)
 		},
 		function_name = "add",
 		source_location = {
-			filename = "__MoveStartingPatches__/edited-noise-programs.lua",
+			filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
 			line_number = 209
 		},
 		type = "function-application"
