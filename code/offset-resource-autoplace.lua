@@ -37,8 +37,7 @@ local function isStartingVariable(var)
 end
 
 local function makeOffsetVar(varName, offsetArgsName)
-	-- Creates a noise expression tree that returns x (or y) offset by the log2 of the offset control, multiplied by the squared scale control, multiplied by 64.
-	-- eg varName == "x", offsetArgsName == "starting-resources"
+	-- Creates a noise expression tree that returns x (or y) offset according to sliders.
 	local baseVar = noise.var(varName)
 	local offsetSlider = noise.var("control-setting:"..offsetArgsName.."-offset-"..varName..":frequency:multiplier")
 	local multiplierSlider = noise.var("control-setting:"..offsetArgsName.."-offset-multiplier:frequency:multiplier")
@@ -50,8 +49,6 @@ local startSubstitutedX = makeOffsetVar("x", "starting-resources")
 local startSubstitutedY = makeOffsetVar("y", "starting-resources")
 local nonstartSubstitutedX = makeOffsetVar("x", "nonstarting-resources")
 local nonstartSubstitutedY = makeOffsetVar("y", "nonstarting-resources")
-
--- Note these substituted vars have meanigless line numbers but that's okay, they at least point to this mod.
 
 local function editNoiseExpr(expr)
 	-- Recursively edit the autoplace expression tree to replace every x and y var with our substituted versions.
