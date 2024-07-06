@@ -16,6 +16,8 @@
 -- x = { source_location = { filename = "__core__/lualib/resource-autoplace.lua", line_number = 288 }, type = "variable", variable_name = "x" },
 -- y = { source_location = { filename = "__core__/lualib/resource-autoplace.lua", line_number = 289 }, type = "variable", variable_name = "y" }
 
+local noise = require("noise")
+
 local function isStartingVariable(var)
 	-- For vanilla
 	if (var.source_location.filename == "__core__/lualib/resource-autoplace.lua"
@@ -37,97 +39,11 @@ end
 local function makeOffsetVar(varName, offsetArgsName)
 	-- Creates a noise expression tree that returns x (or y) offset by the log2 of the offset control, multiplied by the squared scale control, multiplied by 64.
 	-- eg varName == "x", offsetArgsName == "starting-resources"
-	return {
-		arguments = {
-			{
-				source_location = {
-					filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
-					line_number = 273
-				},
-				type = "variable",
-				variable_name = varName,
-			},
-			{
-				arguments = {
-					{
-						arguments = {
-							{
-								arguments = {
-									{
-										source_location = {
-											filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
-											line_number = 209
-										},
-										type = "variable",
-										variable_name =
-										"control-setting:"..offsetArgsName.."-offset-"..varName..":frequency:multiplier"
-									}
-								},
-								function_name = "log2",
-								source_location = {
-									filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
-									line_number = 205
-								},
-								type = "function-application"
-							},
-							{
-								literal_value = -64,
-								source_location = {
-									filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
-									line_number = 78
-								},
-								type = "literal-number"
-							}
-						},
-						function_name = "multiply",
-						source_location = {
-							filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
-							line_number = 205
-						},
-						type = "function-application"
-					},
-					{
-						arguments = {
-							{
-								source_location = {
-									filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
-									line_number = 203
-								},
-								type = "variable",
-								variable_name = "control-setting:"..offsetArgsName.."-offset-multiplier:frequency:multiplier"
-							},
-							{
-								source_location = {
-									filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
-									line_number = 204
-								},
-								type = "variable",
-								variable_name = "control-setting:"..offsetArgsName.."-offset-multiplier:frequency:multiplier"
-							}
-						},
-						function_name = "multiply",
-						source_location = {
-							filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
-							line_number = 205
-						},
-						type = "function-application"
-					}
-				},
-				function_name = "multiply",
-				source_location = {
-					filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
-					line_number = 205
-				},
-				type = "function-application"
-			}
-		},
-		function_name = "add",
-		source_location = {
-			filename = "__MoveStartingPatches__/code/offset-resource-autoplace.lua",
-			line_number = 209
-		},
-		type = "function-application"
-	}
+	local baseVar = noise.var(varName)
+	local offsetSlider = noise.var("control-setting:"..offsetArgsName.."-offset-"..varName..":frequency:multiplier")
+	local multiplierSlider = noise.var("control-setting:"..offsetArgsName.."-offset-multiplier:frequency:multiplier")
+	local offset = noise.log2(offsetSlider) * multiplierSlider * multiplierSlider * 64
+	return baseVar - offset
 end
 
 local startSubstitutedX = makeOffsetVar("x", "starting-resources")
@@ -137,7 +53,7 @@ local nonstartSubstitutedY = makeOffsetVar("y", "nonstarting-resources")
 
 -- Note these substituted vars have meanigless line numbers but that's okay, they at least point to this mod.
 
-local function hotwire(expr)
+local function editNoiseExpr(expr)
 	-- Recursively edit the autoplace expression tree to replace every x and y var with our substituted versions.
 	if expr.type == "function-application" then
 		for argName, arg in pairs(expr.arguments) do
@@ -160,9 +76,9 @@ local function hotwire(expr)
 					expr.arguments[argName] = nonstartSubstitutedY
 				end
 			elseif arg.type == "function-application" then
-				hotwire(arg)
+				editNoiseExpr(arg)
 			elseif arg.type == "procedure-delimiter" then
-				hotwire(arg.expression)
+				editNoiseExpr(arg.expression)
 			--elseif arg.type ~= "literal-number" and arg.type ~= "variable" then
 			--	log("Unknown arg type: " .. arg.type)
 			end
@@ -173,10 +89,10 @@ end
 for _, ent in pairs(data.raw.resource) do
 	if ent.autoplace then
 		if ent.autoplace.probability_expression then
-			hotwire(ent.autoplace.probability_expression)
+			editNoiseExpr(ent.autoplace.probability_expression)
 		end
 		if ent.autoplace.richness_expression then
-			hotwire(ent.autoplace.richness_expression)
+			editNoiseExpr(ent.autoplace.richness_expression)
 		end
 	end
 end
